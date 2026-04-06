@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moderniza — IA para el Sector Publico</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F6FA;
+    --white: #FFFFFF;
+    --text: #1A1D2B;
+    --text-secondary: #5C6178;
+    --text-muted: #9298AD;
+    --border: #E4E7EF;
+    --blue: #2563EB;
+    --blue-soft: #EFF4FF;
+    --blue-medium: #DBEAFE;
+    --gold: #D97706;
+    --gold-soft: #FEF9EC;
+    --green: #059669;
+    --green-soft: #ECFDF5;
+    --purple: #7C3AED;
+    --purple-soft: #F3EEFF;
+    --red: #E11D48;
+    --red-soft: #FFF1F2;
+    --radius: 16px;
+    --radius-sm: 12px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow: 0 4px 12px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-hover: 0 8px 24px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app { display: flex; min-height: 100vh; }
+
+  /* ========== SIDEBAR ========== */
+  .sidebar {
+    width: 250px;
+    background: var(--white);
+    border-right: 1px solid var(--border);
+    padding: 24px 14px;
+    display: flex; flex-direction: column;
+    position: fixed; top: 0; left: 0; bottom: 0;
+  }
+
+  .logo { display: flex; align-items: center; gap: 10px; padding: 0 10px; margin-bottom: 32px; }
+  .logo-box {
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, #1E3A5F, #2563EB);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 800; font-size: 16px;
+  }
+  .logo-text { font-size: 17px; font-weight: 800; color: var(--text); letter-spacing: -0.3px; }
+
+  .nav-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--text-muted);
+    padding: 0 10px; margin: 20px 0 6px;
+  }
+
+  .nav-link {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 10px; border-radius: 8px;
+    font-size: 13px; font-weight: 500; color: var(--text-secondary);
+    text-decoration: none; transition: all 0.15s; cursor: pointer;
+  }
+  .nav-link:hover { background: var(--bg); color: var(--text); }
+  .nav-link.active { background: var(--blue-soft); color: var(--blue); font-weight: 600; }
+  .nav-link svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+  .sidebar-spacer { flex: 1; }
+  .sidebar-user {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 10px; border-radius: 10px; background: var(--bg);
+  }
+  .avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: white;
+  }
+  .user-name { font-size: 13px; font-weight: 600; }
+  .user-role { font-size: 11px; color: var(--text-muted); }
+
+  /* ========== MAIN ========== */
+  .main {
+    flex: 1; margin-left: 250px;
+    padding: 32px 40px 64px;
+    max-width: 1200px;
+  }
+
+  /* ========== HERO ========== */
+  .hero {
+    background: linear-gradient(135deg, #1E3A5F 0%, #2563EB 100%);
+    border-radius: var(--radius); padding: 40px 44px;
+    color: white; position: relative; overflow: hidden; margin-bottom: 40px;
+  }
+  .hero::after {
+    content: ''; position: absolute; right: -40px; top: -40px;
+    width: 220px; height: 220px; background: rgba(255,255,255,0.06); border-radius: 50%;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.15);
+    font-size: 11px; font-weight: 700; padding: 4px 12px;
+    border-radius: 99px; margin-bottom: 14px; letter-spacing: 0.5px;
+  }
+  .hero h1 { font-size: 28px; font-weight: 800; line-height: 1.2; letter-spacing: -0.3px; margin-bottom: 8px; }
+  .hero p { font-size: 14px; color: rgba(255,255,255,0.8); max-width: 500px; line-height: 1.6; }
+  .hero-stats { display: flex; gap: 16px; margin-top: 24px; }
+  .hero-stat { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 18px; }
+  .hero-stat strong { font-size: 20px; font-weight: 800; display: block; }
+  .hero-stat span { font-size: 11px; color: rgba(255,255,255,0.6); }
+
+  /* ========== SECTION ========== */
+  .section-title { font-size: 18px; font-weight: 800; letter-spacing: -0.2px; margin-bottom: 4px; }
+  .section-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+
+  /* ========== FILTERS ========== */
+  .filters-bar {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .filters-bar .filter-label {
+    font-size: 12px; font-weight: 600; color: var(--text-muted); margin-right: 4px;
+  }
+  .filter-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 16px; border-radius: 99px;
+    border: 1px solid var(--border); background: var(--white);
+    font-size: 12px; font-weight: 600; color: var(--text-secondary);
+    cursor: pointer; transition: all 0.15s; user-select: none;
+  }
+  .filter-pill:hover { border-color: #C5CAD8; background: #FAFBFD; }
+  .filter-pill.active { border-color: var(--blue); background: var(--blue-soft); color: var(--blue); }
+  .filter-pill .filter-count {
+    background: var(--bg); color: var(--text-muted);
+    font-size: 10px; font-weight: 700; padding: 1px 6px;
+    border-radius: 99px; min-width: 18px; text-align: center;
+  }
+  .filter-pill.active .filter-count { background: var(--blue-medium); color: var(--blue); }
+
+  /* ========== AGENT CARDS — 4 col grid ========== */
+  .agents-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .agent-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: all 0.25s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .agent-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-3px);
+  }
+
+  .agent-card.hidden { display: none; }
+
+  .agent-card.coming-soon {
+    opacity: 0.65;
+    cursor: default;
+  }
+  .agent-card.coming-soon:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .coming-soon-badge {
+    position: absolute; bottom: 10px; right: 10px;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.6px;
+    color: white; z-index: 3;
+  }
+
+  /* ---- Card Image / Illustration ---- */
+  .agent-card-img {
+    width: 100%;
+    height: 170px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .agent-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Bottom gradient overlay for title */
+  .img-title-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 28px 14px 10px;
+    background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 60%, transparent 100%);
+    z-index: 2;
+  }
+
+  .img-title-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    line-height: 1.2;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  }
+
+  /* Step badge on image */
+  .step-badge {
+    position: absolute; top: 10px; right: 10px;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(4px);
+    color: white;
+    font-size: 11px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 3;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+
+  /* Category tag on image */
+  .img-category {
+    position: absolute; top: 10px; left: 10px;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.6px;
+    color: white; z-index: 3;
+  }
+
+  /* ---- Card Body ---- */
+  .agent-card-body {
+    padding: 16px 18px 18px;
+    display: flex; flex-direction: column; flex: 1;
+  }
+
+  .agent-card-title {
+    font-size: 14px; font-weight: 700; margin-bottom: 6px;
+    line-height: 1.3; color: var(--text);
+    display: none; /* Title now on image overlay */
+  }
+
+  .agent-card-desc {
+    font-size: 11.5px; color: var(--text-secondary); line-height: 1.6;
+    flex: 1;
+  }
+
+  /* ---- Card Footer ---- */
+  .agent-card-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  .agent-card-cta {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11.5px; font-weight: 600;
+    background: none; border: none; cursor: pointer;
+    transition: gap 0.15s;
+  }
+  .agent-card-cta:hover { gap: 9px; }
+  .agent-card-cta svg { width: 13px; height: 13px; }
+
+  .cta-blue { color: var(--blue); }
+  .cta-gold { color: var(--gold); }
+  .cta-green { color: var(--green); }
+  .cta-purple { color: var(--purple); }
+
+  .agent-card-tag {
+    font-size: 10px; font-weight: 600; color: var(--text-muted);
+    display: flex; align-items: center; gap: 4px;
+  }
+  .agent-card-tag svg { width: 12px; height: 12px; }
+
+  /* ========== DIVIDER ========== */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 0 0 40px; }
+
+  /* ========== CONTENIDOS ========== */
+  .content-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 14px; margin-bottom: 48px;
+  }
+  .content-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 22px 20px;
+    transition: all 0.2s; cursor: pointer;
+    display: flex; flex-direction: column;
+  }
+  .content-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+  .content-type {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.8px; margin-bottom: 10px;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .type-teal { color: #0D9488; }
+  .type-gold { color: var(--gold); }
+  .type-purple { color: var(--purple); }
+  .content-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
+  .content-card p { font-size: 12px; color: var(--text-secondary); line-height: 1.55; flex: 1; }
+  .content-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border);
+  }
+  .content-meta { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+  .content-meta svg { width: 12px; height: 12px; }
+  .tidu-link {
+    font-size: 11px; font-weight: 600; color: var(--gold);
+    text-decoration: none; display: flex; align-items: center; gap: 3px;
+  }
+  .tidu-link:hover { text-decoration: underline; }
+  .tidu-link svg { width: 10px; height: 10px; }
+  .tidu-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10px; font-weight: 700; color: var(--gold);
+    background: var(--gold-soft); border: 1px solid #F5A62320;
+    padding: 4px 10px; border-radius: 99px;
+  }
+  .tidu-badge svg { width: 11px; height: 11px; }
+
+  /* ========== LOGIN OVERLAY ========== */
+  .login-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .login-card {
+    background: var(--white); border-radius: 20px;
+    padding: 40px 36px; width: 380px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    border: 1px solid var(--border);
+  }
+  .login-logo { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 20px; }
+  .login-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin: 14px 0 5px; }
+  .login-input {
+    width: 100%; padding: 10px 14px; border-radius: 10px;
+    border: 1px solid var(--border); font-size: 13px; font-family: 'Inter', sans-serif;
+    outline: none; transition: border-color 0.15s;
+  }
+  .login-input:focus { border-color: var(--blue); }
+  .login-btn {
+    width: 100%; padding: 11px; border-radius: 10px;
+    background: var(--blue); color: white; border: none;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    font-family: 'Inter', sans-serif; margin-top: 18px;
+    transition: background 0.15s;
+  }
+  .login-btn:hover { background: #1D4ED8; }
+  .login-btn:disabled { opacity: 0.6; cursor: default; }
+  .login-error {
+    background: var(--red-soft); color: var(--red);
+    font-size: 12px; font-weight: 600; padding: 8px 12px;
+    border-radius: 8px; margin-bottom: 8px; text-align: center;
+  }
+
+  /* ========== AGENT MODAL ========== */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 150;
+    background: rgba(0,0,0,0.35); backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .agent-modal {
+    background: var(--white); border-radius: 20px;
+    width: 540px; max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.15);
+    transform: translateY(12px) scale(0.97);
+    transition: transform 0.25s cubic-bezier(.22,.68,0,1.1);
+  }
+  .modal-overlay.open .agent-modal { transform: translateY(0) scale(1); }
+  .agent-modal-header {
+    padding: 24px 28px 0;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .modal-close-btn {
+    width: 32px; height: 32px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0;
+  }
+  .agent-modal-body { padding: 20px 28px 28px; }
+  .agent-textarea {
+    width: 100%; padding: 12px 14px; border-radius: 10px;
+    border: 1px solid var(--border); font-size: 13px; font-family: 'Inter', sans-serif;
+    outline: none; resize: vertical; line-height: 1.6;
+  }
+  .agent-textarea:focus { border-color: var(--blue); }
+
+  /* Spinner */
+  .spinner {
+    width: 36px; height: 36px; border: 3px solid var(--border);
+    border-top-color: var(--blue); border-radius: 50%;
+    animation: spin 0.7s linear infinite; margin: 0 auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 20px; }
+    .agents-grid { grid-template-columns: 1fr 1fr; }
+    .content-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .agents-grid { grid-template-columns: 1fr; }
+  }
+  @media (min-width: 901px) and (max-width: 1100px) {
+    .agents-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="logo">
+      <div class="logo-box">M</div>
+      <div class="logo-text">Moderniza</div>
+    </div>
+    <div class="nav-label">Menu</div>
+    <a class="nav-link active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Inicio
+    </a>
+    <a class="nav-link" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
+      Mis documentos
+    </a>
+    <div class="nav-label">Aprende</div>
+    <a class="nav-link" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      Contenidos IA
+    </a>
+    <div class="sidebar-spacer"></div>
+    <div class="sidebar-user">
+      <div class="avatar">ML</div>
+      <div>
+        <div class="user-name">Manuel Lopez</div>
+        <div class="user-role">MINEDU</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+        IA para el sector publico
+      </div>
+      <h1>Hola Manuel, bienvenido</h1>
+      <p>Usa nuestros agentes de inteligencia artificial para generar documentos de gestion publica en minutos. Solo describe lo que necesitas y el agente hace el resto.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><strong>7</strong><span>Agentes activos</span></div>
+        <div class="hero-stat"><strong>12</strong><span>Docs generados</span></div>
+        <div class="hero-stat"><strong>~4 min</strong><span>Tiempo promedio</span></div>
+      </div>
+    </section>
+
+    <!-- AGENTES -->
+    <div class="section-title">Tus agentes</div>
+    <div class="section-desc">Elige un agente, describe lo que necesitas, y recibe tu documento listo.</div>
+
+    <!-- FILTROS -->
+    <div class="filters-bar">
+      <span class="filter-label">Filtrar:</span>
+      <button class="filter-pill active" data-filter="todos" onclick="filterAgents('todos')">
+        Todos <span class="filter-count">8</span>
+      </button>
+      <button class="filter-pill" data-filter="procesos" onclick="filterAgents('procesos')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><path d="M11 18H8a2 2 0 0 1-2-2V9"/></svg>
+        Gestion por Procesos <span class="filter-count">5</span>
+      </button>
+      <button class="filter-pill" data-filter="documentos" onclick="filterAgents('documentos')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
+        Documentos <span class="filter-count">2</span>
+      </button>
+      <button class="filter-pill" data-filter="presentaciones" onclick="filterAgents('presentaciones')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+        Presentaciones <span class="filter-count">1</span>
+      </button>
+    </div>
+
+    <!-- GRID DE TARJETAS -->
+    <div class="agents-grid" id="agentsGrid">
+
+      <!-- ===== 1. Inventario de Procesos ===== -->
+      <div class="agent-card" data-category="procesos" data-agent="inventario">
+        <div class="agent-card-img">
+          <img src="img/inventario.png" alt="Mo con inventario de procesos">
+          <span class="img-category">Procesos</span>
+          <div class="step-badge">1</div>
+          <div class="img-title-overlay"><span class="img-title-text">Inventario de Procesos</span></div>
+        </div>
+        <div class="agent-card-body">
+          <div class="agent-card-desc">Sube tus documentos normativos (ROF, manuales) y genera el inventario de procesos desagregado hasta procedimiento, en formato Word.</div>
+          <div class="agent-card-footer">
+            <button class="agent-card-cta cta-blue">Usar agente <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+            <span class="agent-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg> Word</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 2. Ficha de Proceso ===== -->
+      <div class="agent-card" data-category="procesos" data-agent="ficha">
+        <div class="agent-card-img">
+          <img src="img/ficha-proceso.png" alt="Mo con ficha de proceso">
+          <span class="img-category">Procesos</span>
+          <div class="step-badge">2</div>
+          <div class="img-title-overlay"><span class="img-title-text">Ficha de Proceso</span></div>
+        </div>
+        <div class="agent-card-body">
+          <div class="agent-card-desc">Describe el proceso con tus palabras o sube una transcripcion de entrevista y obtendras la ficha completa en Google Docs, segun la NT 002-2025.</div>
+          <div class="agent-card-footer">
+            <button class="agent-card-cta cta-blue">Usar agente <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+            <span class="agent-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg> Google Docs</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 3. Mejora Continua ===== -->
+      <div class="agent-card" data-category="procesos" data-agent="mejora_continua">
+        <div class="agent-card-img">
+          <img src="img/mejora-continua.png" alt="Mo analizando mejora continua">
+          <span class="img-category">Procesos</span>
+          <div class="step-badge">3</div>
+          <div class="img-title-overlay"><span class="img-title-text">Mejora Continua</span></div>
+        </div>
+        <div class="agent-card-body">
+          <div class="agent-card-desc">Compara tu ficha AS-IS contra la norma sustantiva para identificar vacios, aplica la metodologia ECRS y sugiere oportunidades de automatizacion con IA.</div>
+          <div class="agent-card-footer">
+            <button class="agent-card-cta cta-blue">Usar agente <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+            <span class="agent-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21"/></svg> IA</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 4. Ficha de Procedimiento ===== -->
+      <div class="agent-card" data-category="procesos" data-agent="procedimiento">
+        <div class="agent-card-img">
+          <img src="img/ficha-procedimiento.png" alt="Mo con ficha de procedimiento">
+          <span class="img-category">Procesos</span>
+          <div class="step-badge">4</div>
+          <div class="img-title-overlay"><span class="img-title-text">Ficha de Procedimiento</span></div>
+        </div>
+        <div class="agent-card-body">
+          <div class="agent-card-desc">Genera la ficha detallada de cada procedimiento con actividades, responsables, normativa y requisitos, en formato Word.</div>
+          <div class="agent-card-footer">
+            <button class="agent-card-cta cta-blue">Usar agente <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+            <span class="agent-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg> Word</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 5. Diagramador BPMN ===== -->
+      <div class="agent-card" data-category="procesos" data-agent="diagramador">
+        <div class="agent-card-img">
+          <img src="img/diagramador.png" alt="Mo con diagrama BPMN">
+          <span class="img-category">Procesos</span>
+          <div class="step-badge">5</div>
+          <div class="img-title-overlay"><span class="img-title-text">Diagramador BPMN</span></div>
+        </div>
+        <div class="agent-card-body">
+          <div class="agent-card-desc">Genera el diagrama de flujo a partir de tu ficha de proceso o procedimiento, en formato BPMN 2.0 listo para abrir en Bizagi Modeler.</div>
+          <div class="agent-card-footer">
+            <button class="agent-card-cta cta-blue">Usar agente <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+            <span class="agent-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="6" height="6" rx="1"/><rect x="16" y="6" width="6" height="6" rx="1"/><path d="M8 9h8"/></svg> BPMN</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 6. Generador de Informes ===== -->
+      <div class="agent-card" data-category="documentos" data-agent="informes">
+        <div class="agent-card-img">
+          <img src="img/informes.png" alt="Mo con informe tecnico MINEDU">
+          <span class="img-category">Documentos</span>
+          <div class="img-title-overlay"><span class="img-title-text">Generador de Informes</span></div>
+        </div>
+        <div class="agent-card-body">
+          <div class="agent-card-desc">Pega tus notas o texto desordenado y obtendras un informe tecnico en formato MINEDU con antecedentes, analisis, conclusiones y bloques de firma.</div>
+          <div class="agent-card-footer">
+            <button class="agent-card-cta cta-gold">Generar informe <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+            <span class="agent-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg> Word</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 7. Generador de Actas (SIN AGENTE AUN) ===== -->
+      <div class="agent-card coming-soon" data-category="documentos">
+        <div class="agent-card-img" style="background: linear-gradient(135deg, #064E3B 0%, #34D399 100%);">
+          <span class="img-category">Documentos</span>
+          <span class="coming-soon-badge">Proximamente</span>
+          <div class="img-title-overlay"><span class="img-title-text">Generador de Actas</span></div>
+        </div>
+        <div class="agent-card-body">
+          <div class="agent-card-desc">Convierte notas de reunion en actas formales con acuerdos, responsables y plazos.</div>
+          <div class="agent-card-footer">
+            <span class="agent-card-cta" style="color: var(--text-muted); cursor: default;">Proximamente</span>
+            <span class="agent-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg> Word</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 8. Generador de Presentaciones ===== -->
+      <div class="agent-card" data-category="presentaciones" data-agent="presentaciones">
+        <div class="agent-card-img">
+          <img src="img/presentaciones.png" alt="Mo con presentacion PPT">
+          <span class="img-category">Presentaciones</span>
+          <div class="img-title-overlay"><span class="img-title-text">Generador de Presentaciones</span></div>
+        </div>
+        <div class="agent-card-body">
+          <div class="agent-card-desc">Pega texto desordenado y obtendras un PPT profesional. La IA elige infografias (timelines, conos, comparativas) segun tu contenido.</div>
+          <div class="agent-card-footer">
+            <button class="agent-card-cta cta-purple">Generar presentacion <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+            <span class="agent-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg> PPT</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DIVIDER -->
+    <hr class="divider">
+
+    <!-- CONTENIDOS IA -->
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+      <div>
+        <div class="section-title">Aprende sobre IA</div>
+        <div class="section-desc" style="margin-bottom: 0;">Contenidos cortitos para sacarle el jugo a la inteligencia artificial en tu trabajo.</div>
+      </div>
+      <div class="tidu-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        por Tidu
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <div class="content-card">
+        <div class="content-type type-teal">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          Micro-curso
+        </div>
+        <h3>ABC de los Agentes de IA</h3>
+        <p>Que son, como funcionan y como pueden ayudarte en tu dia a dia. Explicado sin jerga tecnica.</p>
+        <div class="content-footer">
+          <div class="content-meta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            15 min
+          </div>
+          <a href="#" class="tidu-link">Ver en Tidu <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="content-type type-gold">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          Guia practica
+        </div>
+        <h3>Como escribir buenos prompts</h3>
+        <p>Aprende a dar instrucciones claras para obtener mejores resultados de cualquier herramienta de IA.</p>
+        <div class="content-footer">
+          <div class="content-meta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            10 min
+          </div>
+          <a href="#" class="tidu-link">Ver en Tidu <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="content-type type-purple">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+          Recurso
+        </div>
+        <h3>IA responsable en el Estado</h3>
+        <p>Principios eticos, privacidad y buenas practicas para usar IA en instituciones publicas.</p>
+        <div class="content-footer">
+          <div class="content-meta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            8 min
+          </div>
+          <a href="#" class="tidu-link">Ver en Tidu <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ========== LOGIN OVERLAY ========== -->
+<div id="loginOverlay" class="login-overlay">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-box" style="width:42px;height:42px;font-size:20px;">M</div>
+      <div class="logo-text" style="font-size:22px;">Moderniza</div>
+    </div>
+    <p style="font-size:13px;color:var(--text-secondary);text-align:center;margin-bottom:24px;">
+      Inicia sesion para acceder a tus agentes de IA
+    </p>
+    <div id="loginError" class="login-error" style="display:none;"></div>
+    <label class="login-label">Correo electronico</label>
+    <input id="loginEmail" type="email" class="login-input" placeholder="tu@entidad.gob.pe">
+    <label class="login-label">Contrasena</label>
+    <input id="loginPassword" type="password" class="login-input" placeholder="••••••••">
+    <button id="loginBtn" class="login-btn" onclick="handleLogin()">Iniciar sesion</button>
+  </div>
+</div>
+
+<!-- ========== AGENT MODAL ========== -->
+<div id="agentModal" class="modal-overlay" onclick="if(event.target===this)closeAgentModal()">
+  <div class="agent-modal">
+    <div class="agent-modal-header">
+      <div>
+        <h2 id="modalTitle" style="font-size:17px;font-weight:800;"></h2>
+        <p id="modalDesc" style="font-size:12px;color:var(--text-secondary);margin-top:2px;"></p>
+      </div>
+      <button class="modal-close-btn" onclick="closeAgentModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="agent-modal-body">
+      <!-- Input section -->
+      <div id="modalInput">
+        <label class="login-label">Pega aqui tu texto o descripcion</label>
+        <textarea id="agentText" class="agent-textarea" rows="8" placeholder="Pega aqui tus notas, transcripcion, borrador o texto desordenado..."></textarea>
+        <div style="display:flex;align-items:center;gap:8px;margin:12px 0;">
+          <span style="font-size:11px;color:var(--text-muted);">O sube un archivo:</span>
+          <input id="agentFile" type="file" accept=".pdf,.docx,.doc,.txt" style="font-size:11px;">
+        </div>
+        <div id="modalExtraFields"></div>
+        <button id="runAgentBtn" class="login-btn" style="margin-top:12px;" onclick="runAgent()">
+          Crear documento
+        </button>
+      </div>
+      <!-- Processing section -->
+      <div id="modalProcessing" style="display:none;text-align:center;padding:40px 0;">
+        <div class="spinner"></div>
+        <p style="font-size:14px;font-weight:600;margin-top:16px;">Mo esta trabajando...</p>
+        <p id="elapsedTime" style="font-size:12px;color:var(--text-muted);margin-top:4px;">0 segundos</p>
+      </div>
+      <!-- Result section -->
+      <div id="modalResult" style="display:none;text-align:center;padding:30px 0;">
+        <div style="width:48px;height:48px;border-radius:50%;background:var(--green-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <p style="font-size:15px;font-weight:700;">Documento listo</p>
+        <a id="downloadLink" href="#" target="_blank" class="login-btn" style="display:inline-flex;align-items:center;gap:6px;margin-top:16px;text-decoration:none;">
+          Descargar documento
+        </a>
+        <button onclick="resetModal()" style="display:block;margin:12px auto 0;font-size:12px;color:var(--blue);background:none;border:none;cursor:pointer;font-weight:600;">
+          Generar otro
+        </button>
+      </div>
+      <!-- Error section -->
+      <div id="modalError" style="display:none;text-align:center;padding:30px 0;">
+        <div style="width:48px;height:48px;border-radius:50%;background:var(--red-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E11D48" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+        </div>
+        <p style="font-size:15px;font-weight:700;color:var(--red);">Algo salio mal</p>
+        <p id="errorMsg" style="font-size:12px;color:var(--text-secondary);margin-top:6px;"></p>
+        <button onclick="resetModal()" class="login-btn" style="margin-top:16px;">Intentar de nuevo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════════════════
+const SUPABASE_URL = 'https://tohhthlndujraumiyvho.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_ixw2cmFY46yS6FU72eOcEg_uFPBXJE9';
+const MODAL_API_URL = 'https://lubailetti--moderniza-agentes-fastapi-app.modal.run';
+const POLL_INTERVAL = 3000;
+const MAX_POLL_TIME = 5 * 60 * 1000;
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Agent metadata for the modal
+const AGENTS = {
+  inventario:      { title: 'Inventario de Procesos',     desc: 'Sube tus documentos normativos y genera el inventario desagregado hasta procedimiento.' },
+  ficha:           { title: 'Ficha de Proceso',           desc: 'Describe el proceso o sube una transcripcion para obtener la ficha completa.' },
+  mejora_continua: { title: 'Mejora Continua',            desc: 'Sube la ficha AS-IS y la norma sustantiva para analizar vacios y oportunidades.' },
+  procedimiento:   { title: 'Ficha de Procedimiento',     desc: 'Genera la ficha detallada con actividades, responsables y requisitos.' },
+  diagramador:     { title: 'Diagramador BPMN',           desc: 'Genera el diagrama de flujo en formato BPMN 2.0 para Bizagi Modeler.' },
+  informes:        { title: 'Generador de Informes',      desc: 'Pega texto desordenado y obtendras un informe tecnico en formato MINEDU.' },
+  presentaciones:  { title: 'Generador de Presentaciones', desc: 'Pega texto y obtendras un PPT con infografias inteligentes.' },
+};
+
+let currentAgent = null;
+let pollTimer = null;
+let startTime = 0;
+let elapsedTimer = null;
+
+// ═══════════════════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════════════════
+async function checkAuth() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    document.getElementById('loginOverlay').style.display = 'none';
+    const name = session.user.user_metadata?.name || session.user.email.split('@')[0];
+    document.querySelector('.hero h1').textContent = 'Hola ' + name + ', bienvenido';
+    document.querySelector('.user-name').textContent = name;
+    document.querySelector('.user-role').textContent = session.user.user_metadata?.entidad || '';
+    const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+    document.querySelector('.avatar').textContent = initials;
+  } else {
+    document.getElementById('loginOverlay').style.display = 'flex';
+  }
+}
+
+async function handleLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  const btn = document.getElementById('loginBtn');
+
+  if (!email || !pass) { errEl.textContent = 'Ingresa correo y contrasena'; errEl.style.display = 'block'; return; }
+  btn.textContent = 'Ingresando...'; btn.disabled = true;
+
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) {
+    errEl.textContent = error.message === 'Invalid login credentials' ? 'Correo o contrasena incorrectos' : error.message;
+    errEl.style.display = 'block';
+    btn.textContent = 'Iniciar sesion'; btn.disabled = false;
+  } else {
+    errEl.style.display = 'none';
+    checkAuth();
+  }
+}
+
+async function handleLogout() {
+  await sb.auth.signOut();
+  document.getElementById('loginOverlay').style.display = 'flex';
+}
+
+// Enter key on password field
+document.getElementById('loginPassword').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+
+// ═══════════════════════════════════════════════════════════════
+// AGENT MODAL
+// ═══════════════════════════════════════════════════════════════
+function openAgentModal(agentType) {
+  if (!agentType || !AGENTS[agentType]) return;
+  currentAgent = agentType;
+  document.getElementById('modalTitle').textContent = AGENTS[agentType].title;
+  document.getElementById('modalDesc').textContent = AGENTS[agentType].desc;
+  resetModal();
+  document.getElementById('agentModal').classList.add('open');
+}
+
+function closeAgentModal() {
+  document.getElementById('agentModal').classList.remove('open');
+  if (pollTimer) clearInterval(pollTimer);
+  if (elapsedTimer) clearInterval(elapsedTimer);
+}
+
+function resetModal() {
+  document.getElementById('modalInput').style.display = 'block';
+  document.getElementById('modalProcessing').style.display = 'none';
+  document.getElementById('modalResult').style.display = 'none';
+  document.getElementById('modalError').style.display = 'none';
+  document.getElementById('agentText').value = '';
+  document.getElementById('agentFile').value = '';
+  document.getElementById('runAgentBtn').disabled = false;
+  document.getElementById('runAgentBtn').textContent = 'Crear documento';
+}
+
+async function runAgent() {
+  const text = document.getElementById('agentText').value.trim();
+  const fileInput = document.getElementById('agentFile');
+  const file = fileInput.files[0];
+
+  if (!text && !file) { alert('Pega texto o sube un archivo'); return; }
+
+  // Get auth token
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { alert('Sesion expirada. Recarga la pagina.'); return; }
+
+  // Build FormData
+  const fd = new FormData();
+  fd.append('agent_type', currentAgent);
+  fd.append('user_id', session.user.id);
+  if (text) fd.append('raw_text', text);
+  if (file) fd.append('files', file, file.name);
+
+  // Show processing
+  document.getElementById('modalInput').style.display = 'none';
+  document.getElementById('modalProcessing').style.display = 'block';
+  startTime = Date.now();
+  elapsedTimer = setInterval(() => {
+    const s = Math.floor((Date.now() - startTime) / 1000);
+    document.getElementById('elapsedTime').textContent = s + ' segundos';
+  }, 1000);
+
+  try {
+    const res = await fetch(MODAL_API_URL + '/api/run-agent', {
+      method: 'POST',
+      body: fd,
+      headers: { 'Authorization': 'Bearer ' + session.access_token },
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || 'Error del servidor (' + res.status + ')');
+    }
+    const data = await res.json();
+    startPolling(data.run_id, session.access_token);
+  } catch (e) {
+    showError(e.message);
+  }
+}
+
+function startPolling(runId, token) {
+  pollTimer = setInterval(async () => {
+    if (Date.now() - startTime > MAX_POLL_TIME) {
+      clearInterval(pollTimer);
+      showError('El agente tardo demasiado. Intenta con un texto mas corto.');
+      return;
+    }
+    try {
+      const res = await fetch(MODAL_API_URL + '/api/run-status/' + runId, {
+        headers: { 'Authorization': 'Bearer ' + token },
+      });
+      const data = await res.json();
+      if (data.status === 'completed') {
+        clearInterval(pollTimer);
+        clearInterval(elapsedTimer);
+        showResult(data.output_url);
+      } else if (data.status === 'failed') {
+        clearInterval(pollTimer);
+        showError(data.output || 'El agente encontro un error.');
+      }
+    } catch {}
+  }, POLL_INTERVAL);
+}
+
+function showResult(url) {
+  document.getElementById('modalProcessing').style.display = 'none';
+  document.getElementById('modalResult').style.display = 'block';
+  document.getElementById('downloadLink').href = url || '#';
+}
+
+function showError(msg) {
+  clearInterval(elapsedTimer);
+  document.getElementById('modalProcessing').style.display = 'none';
+  document.getElementById('modalError').style.display = 'block';
+  document.getElementById('errorMsg').textContent = msg;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CARD CLICKS
+// ═══════════════════════════════════════════════════════════════
+function filterAgents(category) {
+  document.querySelectorAll('.filter-pill').forEach(pill => {
+    pill.classList.toggle('active', pill.dataset.filter === category);
+  });
+  document.querySelectorAll('.agent-card').forEach(card => {
+    if (category === 'todos') card.classList.remove('hidden');
+    else card.classList.toggle('hidden', card.dataset.category !== category);
+  });
+}
+
+// Bind clicks on agent cards
+document.querySelectorAll('.agent-card[data-agent]').forEach(card => {
+  card.addEventListener('click', () => {
+    openAgentModal(card.dataset.agent);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+checkAuth();
+</script>
+
+</body>
+</html>
