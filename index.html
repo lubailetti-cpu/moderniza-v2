@@ -176,26 +176,6 @@
 
   .agent-card.hidden { display: none; }
 
-  .agent-card.coming-soon {
-    opacity: 0.65;
-    cursor: default;
-  }
-  .agent-card.coming-soon:hover {
-    transform: none;
-    box-shadow: none;
-  }
-
-  .coming-soon-badge {
-    position: absolute; bottom: 10px; right: 10px;
-    background: rgba(0,0,0,0.35);
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 6px;
-    padding: 3px 10px;
-    font-size: 9px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.6px;
-    color: white; z-index: 3;
-  }
 
   /* ---- Card Image / Illustration ---- */
   .agent-card-img {
@@ -736,9 +716,10 @@
       <div id="modalInput">
         <label class="login-label">Pega aqui tu texto o descripcion</label>
         <textarea id="agentText" class="agent-textarea" rows="8" placeholder="Pega aqui tus notas, transcripcion, borrador o texto desordenado..."></textarea>
-        <div style="display:flex;align-items:center;gap:8px;margin:12px 0;">
-          <span style="font-size:11px;color:var(--text-muted);">O sube un archivo:</span>
-          <input id="agentFile" type="file" accept=".pdf,.docx,.doc,.txt" style="font-size:11px;">
+        <div style="margin:12px 0;">
+          <span style="font-size:11px;color:var(--text-muted);display:block;margin-bottom:6px;">O sube uno o varios archivos (PDF, Word, TXT):</span>
+          <input id="agentFile" type="file" accept=".pdf,.docx,.doc,.txt" multiple style="font-size:11px;">
+          <div id="fileList" style="margin-top:6px;font-size:11px;color:var(--text-secondary);"></div>
         </div>
         <div id="modalExtraFields"></div>
         <button id="runAgentBtn" class="login-btn" style="margin-top:12px;" onclick="runAgent()">
@@ -854,6 +835,12 @@ async function handleLogout() {
 // Enter key on password field
 document.getElementById('loginPassword').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
 
+// Show selected file names
+document.getElementById('agentFile').addEventListener('change', e => {
+  const names = Array.from(e.target.files).map(f => f.name);
+  document.getElementById('fileList').textContent = names.length ? names.join(', ') : '';
+});
+
 // ═══════════════════════════════════════════════════════════════
 // AGENT MODAL
 // ═══════════════════════════════════════════════════════════════
@@ -879,6 +866,7 @@ function resetModal() {
   document.getElementById('modalError').style.display = 'none';
   document.getElementById('agentText').value = '';
   document.getElementById('agentFile').value = '';
+  document.getElementById('fileList').textContent = '';
   document.getElementById('runAgentBtn').disabled = false;
   document.getElementById('runAgentBtn').textContent = 'Crear documento';
 }
@@ -886,9 +874,9 @@ function resetModal() {
 async function runAgent() {
   const text = document.getElementById('agentText').value.trim();
   const fileInput = document.getElementById('agentFile');
-  const file = fileInput.files[0];
+  const files = fileInput.files;
 
-  if (!text && !file) { alert('Pega texto o sube un archivo'); return; }
+  if (!text && files.length === 0) { alert('Pega texto o sube al menos un archivo'); return; }
 
   // Get auth token
   const { data: { session } } = await sb.auth.getSession();
@@ -899,7 +887,9 @@ async function runAgent() {
   fd.append('agent_type', currentAgent);
   fd.append('user_id', session.user.id);
   if (text) fd.append('raw_text', text);
-  if (file) fd.append('files', file, file.name);
+  for (let i = 0; i < files.length; i++) {
+    fd.append('files', files[i], files[i].name);
+  }
 
   // Show processing
   document.getElementById('modalInput').style.display = 'none';
