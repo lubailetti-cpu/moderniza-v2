@@ -1139,22 +1139,26 @@ function setRating(value) {
   document.getElementById('submitRatingBtn').style.display = 'inline-block';
 }
 
-function submitRating() {
+async function submitRating() {
   const feedback = document.getElementById('feedbackText').value.trim();
-  // Log to console (no server storage — zero storage mode)
-  console.info('[RATING]', JSON.stringify({
-    agent: currentAgent,
-    rating: currentRating,
-    feedback: feedback || null,
-    timestamp: new Date().toISOString(),
-  }));
-  // Show thanks
+  // Show thanks immediately
   document.getElementById('starsContainer').style.display = 'none';
   document.getElementById('feedbackBox').style.display = 'none';
   document.getElementById('submitRatingBtn').style.display = 'none';
   document.getElementById('ratingThanks').style.display = 'block';
   document.querySelector('#ratingSection > p:first-child').style.display = 'none';
   document.querySelector('#ratingSection > p:nth-child(2)').style.display = 'none';
+  // Send to backend (fire and forget — no bloquea al usuario)
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+      fetch(MODAL_API_URL + '/api/rating', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + session.access_token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ agent_type: currentAgent, rating: currentRating, feedback: feedback || null }),
+      });
+    }
+  } catch {}
 }
 
 // ═══════════════════════════════════════════════════════════════
