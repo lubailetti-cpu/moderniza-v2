@@ -176,6 +176,26 @@
 
   .agent-card.hidden { display: none; }
 
+  .agent-card.coming-soon {
+    opacity: 0.65;
+    cursor: default;
+  }
+  .agent-card.coming-soon:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .coming-soon-badge {
+    position: absolute; bottom: 10px; right: 10px;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.6px;
+    color: white; z-index: 3;
+  }
 
   /* ---- Card Image / Illustration ---- */
   .agent-card-img {
@@ -324,174 +344,6 @@
   }
   .tidu-badge svg { width: 11px; height: 11px; }
 
-  /* ========== MO FAB + CHAT ========== */
-  .mo-fab {
-    position: fixed; bottom: 24px; right: 24px; z-index: 120;
-    width: 64px; height: 64px; border-radius: 50%;
-    background: linear-gradient(135deg, #2563EB, #7C3AED);
-    border: none; cursor: pointer;
-    box-shadow: 0 4px 20px rgba(37,99,235,0.4);
-    display: flex; align-items: center; justify-content: center;
-    transition: transform 0.2s, box-shadow 0.2s;
-    overflow: hidden;
-  }
-  .mo-fab:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(37,99,235,0.5); }
-  .mo-fab img { width: 48px; height: 48px; border-radius: 50%; }
-
-  .mo-chat {
-    position: fixed; bottom: 100px; right: 24px; z-index: 120;
-    width: 340px; max-height: 480px;
-    background: var(--white); border-radius: 16px;
-    border: 1px solid var(--border);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-    display: none; flex-direction: column;
-    overflow: hidden;
-  }
-  .mo-chat.open { display: flex; }
-
-  .mo-chat-header {
-    display: flex; align-items: center; gap: 10px;
-    padding: 14px 16px;
-    background: linear-gradient(135deg, #2563EB, #7C3AED);
-    color: white;
-  }
-  .mo-chat-header img { width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); }
-  .mo-chat-header-text h3 { font-size: 14px; font-weight: 700; }
-  .mo-chat-header-text span { font-size: 10px; opacity: 0.8; }
-  .mo-chat-close {
-    margin-left: auto; background: rgba(255,255,255,0.2); border: none;
-    border-radius: 6px; width: 28px; height: 28px;
-    display: flex; align-items: center; justify-content: center; cursor: pointer;
-  }
-  .mo-chat-close svg { width: 14px; height: 14px; color: white; }
-
-  .mo-messages {
-    flex: 1; overflow-y: auto; padding: 14px 16px;
-    display: flex; flex-direction: column; gap: 10px;
-    max-height: 320px; min-height: 200px;
-  }
-
-  .mo-msg {
-    max-width: 85%; padding: 10px 14px;
-    border-radius: 12px; font-size: 12px; line-height: 1.6;
-    word-wrap: break-word;
-  }
-  .mo-msg.assistant {
-    background: var(--blue-soft); color: var(--text);
-    align-self: flex-start; border-bottom-left-radius: 4px;
-  }
-  .mo-msg.user {
-    background: var(--blue); color: white;
-    align-self: flex-end; border-bottom-right-radius: 4px;
-  }
-  .mo-msg.typing {
-    background: var(--bg); align-self: flex-start;
-    border-bottom-left-radius: 4px;
-  }
-  .mo-msg.typing::after {
-    content: '...'; animation: dots 1.2s infinite;
-  }
-  @keyframes dots {
-    0%, 20% { content: '.'; }
-    40% { content: '..'; }
-    60%, 100% { content: '...'; }
-  }
-
-  .mo-input-bar {
-    display: flex; gap: 8px; padding: 12px 14px;
-    border-top: 1px solid var(--border);
-  }
-  .mo-input-bar input {
-    flex: 1; padding: 8px 12px; border-radius: 8px;
-    border: 1px solid var(--border); font-size: 12px;
-    font-family: 'Inter', sans-serif; outline: none;
-  }
-  .mo-input-bar input:focus { border-color: var(--blue); }
-  .mo-input-bar button {
-    width: 34px; height: 34px; border-radius: 8px;
-    background: var(--blue); border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .mo-input-bar button svg { width: 16px; height: 16px; color: white; }
-
-  /* ========== LOGIN OVERLAY ========== */
-  .login-overlay {
-    position: fixed; inset: 0; z-index: 200;
-    background: var(--bg);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .login-card {
-    background: var(--white); border-radius: 20px;
-    padding: 40px 36px; width: 380px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-    border: 1px solid var(--border);
-  }
-  .login-logo { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 20px; }
-  .login-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin: 14px 0 5px; }
-  .login-input {
-    width: 100%; padding: 10px 14px; border-radius: 10px;
-    border: 1px solid var(--border); font-size: 13px; font-family: 'Inter', sans-serif;
-    outline: none; transition: border-color 0.15s;
-  }
-  .login-input:focus { border-color: var(--blue); }
-  .login-btn {
-    width: 100%; padding: 11px; border-radius: 10px;
-    background: var(--blue); color: white; border: none;
-    font-size: 13px; font-weight: 700; cursor: pointer;
-    font-family: 'Inter', sans-serif; margin-top: 18px;
-    transition: background 0.15s;
-  }
-  .login-btn:hover { background: #1D4ED8; }
-  .login-btn:disabled { opacity: 0.6; cursor: default; }
-  .login-error {
-    background: var(--red-soft); color: var(--red);
-    font-size: 12px; font-weight: 600; padding: 8px 12px;
-    border-radius: 8px; margin-bottom: 8px; text-align: center;
-  }
-
-  /* ========== AGENT MODAL ========== */
-  .modal-overlay {
-    position: fixed; inset: 0; z-index: 150;
-    background: rgba(0,0,0,0.35); backdrop-filter: blur(4px);
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; pointer-events: none; transition: opacity 0.2s;
-  }
-  .modal-overlay.open { opacity: 1; pointer-events: auto; }
-  .agent-modal {
-    background: var(--white); border-radius: 20px;
-    width: 540px; max-height: 90vh; overflow-y: auto;
-    box-shadow: 0 24px 64px rgba(0,0,0,0.15);
-    transform: translateY(12px) scale(0.97);
-    transition: transform 0.25s cubic-bezier(.22,.68,0,1.1);
-  }
-  .modal-overlay.open .agent-modal { transform: translateY(0) scale(1); }
-  .agent-modal-header {
-    padding: 24px 28px 0;
-    display: flex; align-items: flex-start; justify-content: space-between;
-  }
-  .modal-close-btn {
-    width: 32px; height: 32px; border-radius: 8px;
-    border: 1px solid var(--border); background: var(--bg);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; flex-shrink: 0;
-  }
-  .agent-modal-body { padding: 20px 28px 28px; }
-  .agent-textarea {
-    width: 100%; padding: 12px 14px; border-radius: 10px;
-    border: 1px solid var(--border); font-size: 13px; font-family: 'Inter', sans-serif;
-    outline: none; resize: vertical; line-height: 1.6;
-  }
-  .agent-textarea:focus { border-color: var(--blue); }
-
-  /* Spinner */
-  .spinner {
-    width: 36px; height: 36px; border: 3px solid var(--border);
-    border-top-color: var(--blue); border-radius: 50%;
-    animation: spin 0.7s linear infinite; margin: 0 auto;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
   /* ========== RESPONSIVE ========== */
   @media (max-width: 900px) {
     .sidebar { display: none; }
@@ -567,7 +419,7 @@
     <div class="filters-bar">
       <span class="filter-label">Filtrar:</span>
       <button class="filter-pill active" data-filter="todos" onclick="filterAgents('todos')">
-        Todos <span class="filter-count">7</span>
+        Todos <span class="filter-count">8</span>
       </button>
       <button class="filter-pill" data-filter="procesos" onclick="filterAgents('procesos')">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><path d="M11 18H8a2 2 0 0 1-2-2V9"/></svg>
@@ -575,7 +427,7 @@
       </button>
       <button class="filter-pill" data-filter="documentos" onclick="filterAgents('documentos')">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
-        Documentos <span class="filter-count">1</span>
+        Documentos <span class="filter-count">2</span>
       </button>
       <button class="filter-pill" data-filter="presentaciones" onclick="filterAgents('presentaciones')">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
@@ -660,10 +512,10 @@
           <img src="img/diagramador.png" alt="Mo con diagrama BPMN">
           <span class="img-category">Procesos</span>
           <div class="step-badge">5</div>
-          <div class="img-title-overlay"><span class="img-title-text">Diagramador de Flujos</span></div>
+          <div class="img-title-overlay"><span class="img-title-text">Diagramador BPMN</span></div>
         </div>
         <div class="agent-card-body">
-          <div class="agent-card-desc">Adjunta tu ficha de proceso o transcripcion, descarga el archivo BPMN e importalo en Bizagi Modeler para tener el flujo listo.</div>
+          <div class="agent-card-desc">Genera el diagrama de flujo a partir de tu ficha de proceso o procedimiento, en formato BPMN 2.0 listo para abrir en Bizagi Modeler.</div>
           <div class="agent-card-footer">
             <button class="agent-card-cta cta-blue">Usar agente <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
             <span class="agent-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="6" height="6" rx="1"/><rect x="16" y="6" width="6" height="6" rx="1"/><path d="M8 9h8"/></svg> BPMN</span>
@@ -687,7 +539,23 @@
         </div>
       </div>
 
-      <!-- ===== 7. Generador de Presentaciones ===== -->
+      <!-- ===== 7. Generador de Actas (SIN AGENTE AUN) ===== -->
+      <div class="agent-card coming-soon" data-category="documentos">
+        <div class="agent-card-img" style="background: linear-gradient(135deg, #064E3B 0%, #34D399 100%);">
+          <span class="img-category">Documentos</span>
+          <span class="coming-soon-badge">Proximamente</span>
+          <div class="img-title-overlay"><span class="img-title-text">Generador de Actas</span></div>
+        </div>
+        <div class="agent-card-body">
+          <div class="agent-card-desc">Convierte notas de reunion en actas formales con acuerdos, responsables y plazos.</div>
+          <div class="agent-card-footer">
+            <span class="agent-card-cta" style="color: var(--text-muted); cursor: default;">Proximamente</span>
+            <span class="agent-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg> Word</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 8. Generador de Presentaciones ===== -->
       <div class="agent-card" data-category="presentaciones" data-agent="presentaciones">
         <div class="agent-card-img">
           <img src="img/presentaciones.png" alt="Mo con presentacion PPT">
@@ -771,399 +639,19 @@
   </main>
 </div>
 
-<!-- ========== MO ASSISTANT ========== -->
-<button class="mo-fab" onclick="toggleMoChat()" title="Preguntale a Mo">
-  <img src="img/mo-face.png" alt="Mo">
-</button>
-
-<div id="moChat" class="mo-chat">
-  <div class="mo-chat-header">
-    <img src="img/mo-face.png" alt="Mo">
-    <div class="mo-chat-header-text">
-      <h3>Mo</h3>
-      <span>Tu asistente de modernizacion</span>
-    </div>
-    <button class="mo-chat-close" onclick="toggleMoChat()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-    </button>
-  </div>
-  <div id="moMessages" class="mo-messages">
-    <div class="mo-msg assistant">Hola, soy Mo, tu asistente de modernizacion. Preguntame sobre normativa, los agentes de la plataforma, IA, o lo que necesites.</div>
-  </div>
-  <div class="mo-input-bar">
-    <input id="moInput" type="text" placeholder="Escribe tu pregunta..." onkeydown="if(event.key==='Enter')sendToMo()">
-    <button onclick="sendToMo()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-    </button>
-  </div>
-</div>
-
-<!-- ========== LOGIN OVERLAY ========== -->
-<div id="loginOverlay" class="login-overlay">
-  <div class="login-card">
-    <div class="login-logo">
-      <div class="logo-box" style="width:42px;height:42px;font-size:20px;">M</div>
-      <div class="logo-text" style="font-size:22px;">Moderniza</div>
-    </div>
-    <p style="font-size:13px;color:var(--text-secondary);text-align:center;margin-bottom:24px;">
-      Inicia sesion para acceder a tus agentes de IA
-    </p>
-    <div id="loginError" class="login-error" style="display:none;"></div>
-    <label class="login-label">Correo electronico</label>
-    <input id="loginEmail" type="email" class="login-input" placeholder="tu@entidad.gob.pe">
-    <label class="login-label">Contrasena</label>
-    <input id="loginPassword" type="password" class="login-input" placeholder="••••••••">
-    <button id="loginBtn" class="login-btn" onclick="handleLogin()">Iniciar sesion</button>
-  </div>
-</div>
-
-<!-- ========== AGENT MODAL ========== -->
-<div id="agentModal" class="modal-overlay" onclick="if(event.target===this)closeAgentModal()">
-  <div class="agent-modal">
-    <div class="agent-modal-header">
-      <div>
-        <h2 id="modalTitle" style="font-size:17px;font-weight:800;"></h2>
-        <p id="modalDesc" style="font-size:12px;color:var(--text-secondary);margin-top:2px;"></p>
-      </div>
-      <button class="modal-close-btn" onclick="closeAgentModal()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
-    </div>
-    <div class="agent-modal-body">
-      <!-- Input section -->
-      <div id="modalInput">
-        <label class="login-label">Pega aqui tu texto o descripcion</label>
-        <textarea id="agentText" class="agent-textarea" rows="8" placeholder="Pega aqui tus notas, transcripcion, borrador o texto desordenado..."></textarea>
-        <div style="margin:12px 0;">
-          <span style="font-size:11px;color:var(--text-muted);display:block;margin-bottom:6px;">O sube uno o varios archivos (PDF, Word, TXT):</span>
-          <input id="agentFile" type="file" accept=".pdf,.docx,.doc,.txt" multiple style="font-size:11px;">
-          <div id="fileList" style="margin-top:6px;font-size:11px;color:var(--text-secondary);"></div>
-        </div>
-        <div id="modalExtraFields"></div>
-        <button id="runAgentBtn" class="login-btn" style="margin-top:12px;" onclick="runAgent()">
-          Crear documento
-        </button>
-      </div>
-      <!-- Processing section -->
-      <div id="modalProcessing" style="display:none;text-align:center;padding:40px 0;">
-        <div class="spinner"></div>
-        <p style="font-size:14px;font-weight:600;margin-top:16px;">Mo esta trabajando...</p>
-        <p id="elapsedTime" style="font-size:12px;color:var(--text-muted);margin-top:4px;">0 segundos</p>
-      </div>
-      <!-- Result section -->
-      <div id="modalResult" style="display:none;text-align:center;padding:30px 0;">
-        <div style="width:48px;height:48px;border-radius:50%;background:var(--green-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <p style="font-size:15px;font-weight:700;">Documento listo</p>
-        <a id="downloadLink" href="#" target="_blank" class="login-btn" style="display:inline-flex;align-items:center;gap:6px;margin-top:16px;text-decoration:none;">
-          Descargar documento
-        </a>
-        <button onclick="resetModal()" style="display:block;margin:12px auto 0;font-size:12px;color:var(--blue);background:none;border:none;cursor:pointer;font-weight:600;">
-          Generar otro
-        </button>
-      </div>
-      <!-- Error section -->
-      <div id="modalError" style="display:none;text-align:center;padding:30px 0;">
-        <div style="width:48px;height:48px;border-radius:50%;background:var(--red-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E11D48" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
-        </div>
-        <p style="font-size:15px;font-weight:700;color:var(--red);">Algo salio mal</p>
-        <p id="errorMsg" style="font-size:12px;color:var(--text-secondary);margin-top:6px;"></p>
-        <button onclick="resetModal()" class="login-btn" style="margin-top:16px;">Intentar de nuevo</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Supabase SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-
 <script>
-// ═══════════════════════════════════════════════════════════════
-// CONFIG
-// ═══════════════════════════════════════════════════════════════
-const SUPABASE_URL = 'https://tohhthlndujraumiyvho.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_ixw2cmFY46yS6FU72eOcEg_uFPBXJE9';
-const MODAL_API_URL = 'https://lubailetti--moderniza-agentes-fastapi-app.modal.run';
-const POLL_INTERVAL = 3000;
-const MAX_POLL_TIME = 5 * 60 * 1000;
-
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// Agent metadata for the modal
-const AGENTS = {
-  inventario:      { title: 'Inventario de Procesos',     desc: 'Sube tus documentos normativos y genera el inventario desagregado hasta procedimiento.' },
-  ficha:           { title: 'Ficha de Proceso',           desc: 'Describe el proceso o sube una transcripcion para obtener la ficha completa.' },
-  mejora_continua: { title: 'Mejora Continua',            desc: 'Sube la ficha AS-IS y la norma sustantiva para analizar vacios y oportunidades.' },
-  procedimiento:   { title: 'Ficha de Procedimiento',     desc: 'Genera la ficha detallada con actividades, responsables y requisitos.' },
-  diagramador:     { title: 'Diagramador de Flujos de Procesos', desc: '1. Adjunta la ficha de proceso, procedimiento, descripcion o transcripcion de entrevista. 2. Ejecuta y descarga el archivo BPMN. 3. En Bizagi Modeler ve a Importar/Exportar > Importar > Importar BPMN, selecciona el archivo y tendras una primera version del flujo para ajustar.' },
-  informes:        { title: 'Generador de Informes',      desc: 'Pega texto desordenado y obtendras un informe tecnico en formato MINEDU.' },
-  presentaciones:  { title: 'Generador de Presentaciones', desc: 'Pega texto y obtendras un PPT con infografias inteligentes.' },
-};
-
-let currentAgent = null;
-let pollTimer = null;
-let startTime = 0;
-let elapsedTimer = null;
-
-// ═══════════════════════════════════════════════════════════════
-// AUTH
-// ═══════════════════════════════════════════════════════════════
-async function checkAuth() {
-  const { data: { session } } = await sb.auth.getSession();
-  if (session) {
-    document.getElementById('loginOverlay').style.display = 'none';
-    const name = session.user.user_metadata?.name || session.user.email.split('@')[0];
-    document.querySelector('.hero h1').textContent = 'Hola ' + name + ', bienvenido';
-    document.querySelector('.user-name').textContent = name;
-    document.querySelector('.user-role').textContent = session.user.user_metadata?.entidad || '';
-    const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
-    document.querySelector('.avatar').textContent = initials;
-  } else {
-    document.getElementById('loginOverlay').style.display = 'flex';
-  }
-}
-
-async function handleLogin() {
-  const email = document.getElementById('loginEmail').value.trim();
-  const pass = document.getElementById('loginPassword').value;
-  const errEl = document.getElementById('loginError');
-  const btn = document.getElementById('loginBtn');
-
-  if (!email || !pass) { errEl.textContent = 'Ingresa correo y contrasena'; errEl.style.display = 'block'; return; }
-  btn.textContent = 'Ingresando...'; btn.disabled = true;
-
-  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
-  if (error) {
-    errEl.textContent = error.message === 'Invalid login credentials' ? 'Correo o contrasena incorrectos' : error.message;
-    errEl.style.display = 'block';
-    btn.textContent = 'Iniciar sesion'; btn.disabled = false;
-  } else {
-    errEl.style.display = 'none';
-    checkAuth();
-  }
-}
-
-async function handleLogout() {
-  await sb.auth.signOut();
-  document.getElementById('loginOverlay').style.display = 'flex';
-}
-
-// Enter key on password field
-document.getElementById('loginPassword').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
-
-// Show selected file names
-document.getElementById('agentFile').addEventListener('change', e => {
-  const names = Array.from(e.target.files).map(f => f.name);
-  document.getElementById('fileList').textContent = names.length ? names.join(', ') : '';
-});
-
-// ═══════════════════════════════════════════════════════════════
-// AGENT MODAL
-// ═══════════════════════════════════════════════════════════════
-function openAgentModal(agentType) {
-  if (!agentType || !AGENTS[agentType]) return;
-  currentAgent = agentType;
-  document.getElementById('modalTitle').textContent = AGENTS[agentType].title;
-  document.getElementById('modalDesc').textContent = AGENTS[agentType].desc;
-  resetModal();
-  document.getElementById('agentModal').classList.add('open');
-}
-
-function closeAgentModal() {
-  document.getElementById('agentModal').classList.remove('open');
-  if (pollTimer) clearInterval(pollTimer);
-  if (elapsedTimer) clearInterval(elapsedTimer);
-}
-
-function resetModal() {
-  document.getElementById('modalInput').style.display = 'block';
-  document.getElementById('modalProcessing').style.display = 'none';
-  document.getElementById('modalResult').style.display = 'none';
-  document.getElementById('modalError').style.display = 'none';
-  document.getElementById('agentText').value = '';
-  document.getElementById('agentFile').value = '';
-  document.getElementById('fileList').textContent = '';
-  document.getElementById('runAgentBtn').disabled = false;
-  document.getElementById('runAgentBtn').textContent = 'Crear documento';
-}
-
-async function runAgent() {
-  const text = document.getElementById('agentText').value.trim();
-  const fileInput = document.getElementById('agentFile');
-  const files = fileInput.files;
-
-  if (!text && files.length === 0) { alert('Pega texto o sube al menos un archivo'); return; }
-
-  // Get auth token
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) { alert('Sesion expirada. Recarga la pagina.'); return; }
-
-  // Build FormData
-  const fd = new FormData();
-  fd.append('agent_type', currentAgent);
-  fd.append('user_id', session.user.id);
-  if (text) fd.append('raw_text', text);
-  for (let i = 0; i < files.length; i++) {
-    fd.append('files', files[i], files[i].name);
-  }
-
-  // Show processing
-  document.getElementById('modalInput').style.display = 'none';
-  document.getElementById('modalProcessing').style.display = 'block';
-  startTime = Date.now();
-  elapsedTimer = setInterval(() => {
-    const s = Math.floor((Date.now() - startTime) / 1000);
-    document.getElementById('elapsedTime').textContent = s + ' segundos';
-  }, 1000);
-
-  try {
-    const res = await fetch(MODAL_API_URL + '/api/run-agent', {
-      method: 'POST',
-      body: fd,
-      headers: { 'Authorization': 'Bearer ' + session.access_token },
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.detail || 'Error del servidor (' + res.status + ')');
-    }
-    const data = await res.json();
-    startPolling(data.run_id, session.access_token);
-  } catch (e) {
-    showError(e.message);
-  }
-}
-
-function startPolling(runId, token) {
-  pollTimer = setInterval(async () => {
-    if (Date.now() - startTime > MAX_POLL_TIME) {
-      clearInterval(pollTimer);
-      showError('El agente tardo demasiado. Intenta con un texto mas corto.');
-      return;
-    }
-    try {
-      const res = await fetch(MODAL_API_URL + '/api/run-status/' + runId, {
-        headers: { 'Authorization': 'Bearer ' + token },
-      });
-      const data = await res.json();
-      if (data.status === 'completed') {
-        clearInterval(pollTimer);
-        clearInterval(elapsedTimer);
-        showResult(data.output_url);
-      } else if (data.status === 'failed') {
-        clearInterval(pollTimer);
-        showError(data.output || 'El agente encontro un error.');
-      }
-    } catch {}
-  }, POLL_INTERVAL);
-}
-
-function showResult(url) {
-  document.getElementById('modalProcessing').style.display = 'none';
-  document.getElementById('modalResult').style.display = 'block';
-  document.getElementById('downloadLink').href = url || '#';
-}
-
-function showError(msg) {
-  clearInterval(elapsedTimer);
-  document.getElementById('modalProcessing').style.display = 'none';
-  document.getElementById('modalError').style.display = 'block';
-  document.getElementById('errorMsg').textContent = msg;
-}
-
-// ═══════════════════════════════════════════════════════════════
-// CARD CLICKS
-// ═══════════════════════════════════════════════════════════════
 function filterAgents(category) {
   document.querySelectorAll('.filter-pill').forEach(pill => {
     pill.classList.toggle('active', pill.dataset.filter === category);
   });
   document.querySelectorAll('.agent-card').forEach(card => {
-    if (category === 'todos') card.classList.remove('hidden');
-    else card.classList.toggle('hidden', card.dataset.category !== category);
-  });
-}
-
-// Bind clicks on agent cards
-document.querySelectorAll('.agent-card[data-agent]').forEach(card => {
-  card.addEventListener('click', () => {
-    openAgentModal(card.dataset.agent);
-  });
-});
-
-// ═══════════════════════════════════════════════════════════════
-// MO CHAT
-// ═══════════════════════════════════════════════════════════════
-let moHistory = [];
-
-function toggleMoChat() {
-  document.getElementById('moChat').classList.toggle('open');
-  if (document.getElementById('moChat').classList.contains('open')) {
-    document.getElementById('moInput').focus();
-  }
-}
-
-async function sendToMo() {
-  const input = document.getElementById('moInput');
-  const msg = input.value.trim();
-  if (!msg) return;
-  input.value = '';
-
-  // Add user message
-  addMoMessage('user', msg);
-  moHistory.push({ role: 'user', content: msg });
-
-  // Show typing
-  const typingEl = addMoMessage('typing', '');
-
-  // Get auth token
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) { removeMoMessage(typingEl); addMoMessage('assistant', 'Sesion expirada. Recarga la pagina.'); return; }
-
-  try {
-    const res = await fetch(MODAL_API_URL + '/api/chat-mo', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + session.access_token,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ message: msg, history: moHistory.slice(-20) }),
-    });
-    removeMoMessage(typingEl);
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      addMoMessage('assistant', 'Error: ' + (err.detail || 'No pude conectarme.'));
-      return;
+    if (category === 'todos') {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.toggle('hidden', card.dataset.category !== category);
     }
-    const data = await res.json();
-    addMoMessage('assistant', data.reply);
-    moHistory.push({ role: 'assistant', content: data.reply });
-  } catch (e) {
-    removeMoMessage(typingEl);
-    addMoMessage('assistant', 'No pude conectarme al servidor. Intenta de nuevo.');
-  }
+  });
 }
-
-function addMoMessage(role, text) {
-  const container = document.getElementById('moMessages');
-  const div = document.createElement('div');
-  div.className = 'mo-msg ' + role;
-  div.textContent = text;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-  return div;
-}
-
-function removeMoMessage(el) {
-  if (el && el.parentNode) el.parentNode.removeChild(el);
-}
-
-// ═══════════════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════════════
-checkAuth();
 </script>
 
 </body>
