@@ -1131,7 +1131,7 @@ async function runAgent() {
     if (s >= 60 && !longWaitShown) {
       longWaitShown = true;
       document.getElementById('longWaitMsg').style.display = 'block';
-      document.getElementById('longWaitMsg').textContent = 'Este entregable es mas complejo, Mo necesita unos minutos mas. Ya casi...';
+      document.getElementById('longWaitMsg').textContent = 'Este entregable es mas complejo, Mo necesita 1 minuto max aprox. Ya casi...';
     }
     if (s >= 120 && longWaitShown) {
       document.getElementById('longWaitMsg').textContent = 'Casi listo, Mo esta dando los ultimos toques a tu documento...';
