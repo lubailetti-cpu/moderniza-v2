@@ -877,8 +877,9 @@
       <!-- Processing section -->
       <div id="modalProcessing" style="display:none;text-align:center;padding:40px 0;">
         <div class="spinner"></div>
-        <p style="font-size:14px;font-weight:600;margin-top:16px;">Mo esta trabajando...</p>
+        <p id="processingPhrase" style="font-size:14px;font-weight:600;margin-top:16px;transition:opacity 0.3s;">Mo esta trabajando...</p>
         <p id="elapsedTime" style="font-size:12px;color:var(--text-muted);margin-top:4px;">0 segundos</p>
+        <p id="longWaitMsg" style="display:none;font-size:11px;color:var(--gold);margin-top:10px;font-weight:500;"></p>
       </div>
       <!-- Result section -->
       <div id="modalResult" style="display:none;text-align:center;padding:30px 0;">
@@ -946,19 +947,48 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Agent metadata for the modal
 const AGENTS = {
-  inventario:      { title: 'Inventario de Procesos',     desc: 'Sube tus documentos normativos y genera el inventario desagregado hasta procedimiento.' },
-  ficha:           { title: 'Ficha de Proceso',           desc: 'Describe el proceso o sube una transcripcion para obtener la ficha completa.' },
-  mejora_continua: { title: 'Mejora Continua',            desc: 'Sube la ficha AS-IS y la norma sustantiva para analizar vacios y oportunidades.' },
-  procedimiento:   { title: 'Ficha de Procedimiento',     desc: 'Genera la ficha detallada con actividades, responsables y requisitos.' },
-  diagramador:     { title: 'Diagramador de Flujos de Procesos', desc: '1. Adjunta la ficha de proceso, procedimiento, descripcion o transcripcion de entrevista. 2. Ejecuta y descarga el archivo BPMN. 3. En Bizagi Modeler ve a Importar/Exportar > Importar > Importar BPMN, selecciona el archivo y tendras una primera version del flujo para ajustar.' },
-  informes:        { title: 'Generador de Informes',      desc: 'Pega texto desordenado y obtendras un informe tecnico en formato MINEDU.' },
-  presentaciones:  { title: 'Generador de Presentaciones', desc: 'Pega texto y obtendras un PPT con infografias inteligentes.' },
+  inventario: {
+    title: 'Inventario de Procesos',
+    desc: 'Sube tus documentos normativos y genera el inventario desagregado hasta procedimiento.',
+    phrases: ['Leyendo tus documentos normativos...', 'Identificando macroprocesos y procesos...', 'Desagregando hasta nivel procedimiento...', 'Armando la tabla de 9 columnas...', 'Mo tiene tu inventario casi listo...']
+  },
+  ficha: {
+    title: 'Ficha de Proceso',
+    desc: 'Describe el proceso o sube una transcripcion para obtener la ficha completa.',
+    phrases: ['Analizando tu descripcion del proceso...', 'Identificando proveedores y productos...', 'Generando indicadores de gestion...', 'Estructurando la ficha segun NT 002-2025...', 'Mo esta afinando los detalles...']
+  },
+  mejora_continua: {
+    title: 'Mejora Continua',
+    desc: 'Sube la ficha AS-IS y la norma sustantiva para analizar vacios y oportunidades.',
+    phrases: ['Comparando tu proceso contra la norma...', 'Identificando vacios normativos...', 'Aplicando metodologia ECRS...', 'Buscando oportunidades de automatizacion con IA...', 'Mo encontro varias mejoras para ti...']
+  },
+  procedimiento: {
+    title: 'Ficha de Procedimiento',
+    desc: 'Genera la ficha detallada con actividades, responsables y requisitos.',
+    phrases: ['Analizando las actividades del proceso...', 'Identificando responsables y registros...', 'Estructurando la normativa aplicable...', 'Generando la tabla de actividades paso a paso...', 'Mo esta armando tu procedimiento...']
+  },
+  diagramador: {
+    title: 'Diagramador de Flujos de Procesos',
+    desc: '1. Adjunta la ficha de proceso, procedimiento, descripcion o transcripcion. 2. Ejecuta y descarga el archivo BPMN. 3. En Bizagi Modeler: Importar/Exportar > Importar BPMN > selecciona el archivo.',
+    phrases: ['Analizando el flujo de tu proceso...', 'Diseñando pools y lanes...', 'Conectando actividades y decisiones...', 'Generando XML compatible con Bizagi...', 'Mo tiene tu diagrama casi listo...']
+  },
+  informes: {
+    title: 'Generador de Informes',
+    desc: 'Pega texto desordenado y obtendras un informe tecnico en formato MINEDU.',
+    phrases: ['Analizando tus notas...', 'Organizando antecedentes y analisis...', 'Redactando conclusiones y recomendacion...', 'Generando formato oficial MINEDU...', 'Mo tiene algo bueno para ti...']
+  },
+  presentaciones: {
+    title: 'Generador de Presentaciones',
+    desc: 'Pega texto y obtendras un PPT con infografias inteligentes.',
+    phrases: ['Analizando tu contenido...', 'Eligiendo las mejores visualizaciones...', 'Diseñando slides con estetica institucional...', 'Agregando infografias y datos...', 'Mo tiene tu presentacion casi lista...']
+  },
 };
 
 let currentAgent = null;
 let pollTimer = null;
 let startTime = 0;
 let elapsedTimer = null;
+let phraseTimer = null;
 
 // ═══════════════════════════════════════════════════════════════
 // AUTH
@@ -1028,6 +1058,7 @@ function closeAgentModal() {
   document.getElementById('agentModal').classList.remove('open');
   if (pollTimer) clearInterval(pollTimer);
   if (elapsedTimer) clearInterval(elapsedTimer);
+  if (phraseTimer) clearInterval(phraseTimer);
 }
 
 function resetModal() {
@@ -1072,13 +1103,39 @@ async function runAgent() {
     fd.append('files', files[i], files[i].name);
   }
 
-  // Show processing
+  // Show processing with rotating phrases
   document.getElementById('modalInput').style.display = 'none';
   document.getElementById('modalProcessing').style.display = 'block';
+  document.getElementById('longWaitMsg').style.display = 'none';
   startTime = Date.now();
+
+  // Rotating phrases
+  const phrases = AGENTS[currentAgent]?.phrases || ['Mo esta trabajando...'];
+  let phraseIdx = 0;
+  const phraseEl = document.getElementById('processingPhrase');
+  phraseEl.textContent = phrases[0];
+  phraseTimer = setInterval(() => {
+    phraseIdx = (phraseIdx + 1) % phrases.length;
+    phraseEl.style.opacity = '0';
+    setTimeout(() => {
+      phraseEl.textContent = phrases[phraseIdx];
+      phraseEl.style.opacity = '1';
+    }, 300);
+  }, 2500);
+
+  // Elapsed time + long wait message
+  let longWaitShown = false;
   elapsedTimer = setInterval(() => {
     const s = Math.floor((Date.now() - startTime) / 1000);
     document.getElementById('elapsedTime').textContent = s + ' segundos';
+    if (s >= 60 && !longWaitShown) {
+      longWaitShown = true;
+      document.getElementById('longWaitMsg').style.display = 'block';
+      document.getElementById('longWaitMsg').textContent = 'Este entregable es mas complejo, Mo necesita unos minutos mas. Ya casi...';
+    }
+    if (s >= 120 && longWaitShown) {
+      document.getElementById('longWaitMsg').textContent = 'Casi listo, Mo esta dando los ultimos toques a tu documento...';
+    }
   }, 1000);
 
   try {
@@ -1089,6 +1146,7 @@ async function runAgent() {
       headers: { 'Authorization': 'Bearer ' + session.access_token },
     });
     clearInterval(elapsedTimer);
+    clearInterval(phraseTimer);
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
@@ -1119,6 +1177,7 @@ function showResult(blobUrl, filename) {
 
 function showError(msg) {
   clearInterval(elapsedTimer);
+  clearInterval(phraseTimer);
   document.getElementById('modalProcessing').style.display = 'none';
   document.getElementById('modalError').style.display = 'block';
   document.getElementById('errorMsg').textContent = msg;
