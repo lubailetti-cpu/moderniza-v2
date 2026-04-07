@@ -880,6 +880,17 @@
       </button>
     </div>
     <div id="forgotMsg" style="display:none;margin-top:10px;padding:10px 12px;border-radius:8px;font-size:11px;text-align:center;"></div>
+
+    <!-- Reset password form (hidden by default, shown when arriving from email link) -->
+    <div id="resetPasswordForm" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <p style="font-size:13px;font-weight:600;text-align:center;margin-bottom:12px;">Crea tu nueva contrasena</p>
+      <label class="login-label">Nueva contrasena</label>
+      <input id="newPassword" type="password" class="login-input" placeholder="Minimo 8 caracteres">
+      <label class="login-label">Confirmar contrasena</label>
+      <input id="confirmPassword" type="password" class="login-input" placeholder="Repite la contrasena">
+      <button class="login-btn" onclick="handleResetPassword()">Cambiar contrasena</button>
+      <div id="resetMsg" style="display:none;margin-top:10px;padding:10px 12px;border-radius:8px;font-size:11px;text-align:center;"></div>
+    </div>
   </div>
 </div>
 
@@ -1082,7 +1093,7 @@ async function handleForgotPassword() {
   }
   document.getElementById('forgotLink').textContent = 'Enviando...';
   const { error } = await sb.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.origin + '/reset-password',
+    redirectTo: window.location.origin,
   });
   if (error) {
     msgEl.style.display = 'block';
@@ -1385,8 +1396,58 @@ function removeMoMessage(el) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// RESET PASSWORD
+// ═══════════════════════════════════════════════════════════════
+async function handleResetPassword() {
+  const pass = document.getElementById('newPassword').value;
+  const confirm = document.getElementById('confirmPassword').value;
+  const msgEl = document.getElementById('resetMsg');
+
+  if (pass.length < 8) {
+    msgEl.style.display = 'block'; msgEl.style.background = 'var(--red-soft)'; msgEl.style.color = 'var(--red)';
+    msgEl.textContent = 'La contrasena debe tener al menos 8 caracteres';
+    return;
+  }
+  if (pass !== confirm) {
+    msgEl.style.display = 'block'; msgEl.style.background = 'var(--red-soft)'; msgEl.style.color = 'var(--red)';
+    msgEl.textContent = 'Las contrasenas no coinciden';
+    return;
+  }
+
+  const { error } = await sb.auth.updateUser({ password: pass });
+  if (error) {
+    msgEl.style.display = 'block'; msgEl.style.background = 'var(--red-soft)'; msgEl.style.color = 'var(--red)';
+    msgEl.textContent = error.message;
+  } else {
+    msgEl.style.display = 'block'; msgEl.style.background = 'var(--green-soft)'; msgEl.style.color = 'var(--green)';
+    msgEl.textContent = 'Contrasena actualizada. Redirigiendo...';
+    setTimeout(() => { window.location.href = window.location.origin; }, 1500);
+  }
+}
+
+// Detect if user arrived from password reset email
+function checkResetToken() {
+  const hash = window.location.hash;
+  if (hash && hash.includes('access_token') && hash.includes('type=recovery')) {
+    // Show reset form, hide login form
+    document.getElementById('loginEmail').parentElement.querySelectorAll('.login-label, .login-input, .login-btn, #forgotLink').forEach(el => {
+      if (el.id !== 'resetPasswordForm') el.style.display = 'none';
+    });
+    // Hide login fields
+    document.getElementById('loginEmail').style.display = 'none';
+    document.getElementById('loginPassword').style.display = 'none';
+    document.getElementById('loginBtn').style.display = 'none';
+    document.getElementById('forgotLink').style.display = 'none';
+    document.querySelectorAll('.login-card .login-label').forEach(l => l.style.display = 'none');
+    document.getElementById('resetPasswordForm').style.display = 'block';
+    document.getElementById('loginOverlay').style.display = 'flex';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════════
+checkResetToken();
 checkAuth();
 </script>
 
