@@ -576,9 +576,11 @@
     <div class="sidebar-spacer"></div>
 
     <!-- Hecho por Tidu -->
-    <div style="margin:0 10px 10px;padding:6px 10px;background:var(--bg);border-radius:8px;text-align:center;border:1px solid var(--border);">
-      <span style="font-size:9px;color:var(--text-muted);">Hecho con <span style="color:#7C3AED;">&#9829;</span> por </span>
-      <a href="https://tidusoluciones.com" target="_blank" style="font-size:9px;font-weight:700;color:#7C3AED;text-decoration:none;">Tidu</a>
+    <div style="margin:0 14px 12px;padding:10px 14px;background:linear-gradient(135deg,#F3EEFF,#EFF4FF);border-radius:10px;text-align:center;border:1px solid #E4E0F4;">
+      <span style="font-size:10px;color:var(--text-secondary);">Hecho con </span>
+      <span style="color:#7C3AED;font-size:12px;">&#9829;</span>
+      <span style="font-size:10px;color:var(--text-secondary);"> por </span>
+      <a href="https://tidusoluciones.com" target="_blank" style="font-size:10px;font-weight:800;color:#7C3AED;text-decoration:none;letter-spacing:0.3px;">Tidu</a>
     </div>
 
     <!-- User dropdown -->
@@ -872,6 +874,12 @@
     <label class="login-label">Contrasena</label>
     <input id="loginPassword" type="password" class="login-input" placeholder="••••••••">
     <button id="loginBtn" class="login-btn" onclick="handleLogin()">Iniciar sesion</button>
+    <div style="text-align:center;margin-top:14px;">
+      <button id="forgotLink" onclick="handleForgotPassword()" style="background:none;border:none;font-size:12px;color:var(--blue);cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;">
+        Olvide mi contrasena
+      </button>
+    </div>
+    <div id="forgotMsg" style="display:none;margin-top:10px;padding:10px 12px;border-radius:8px;font-size:11px;text-align:center;"></div>
   </div>
 </div>
 
@@ -1059,6 +1067,35 @@ async function handleLogin() {
 async function handleLogout() {
   await sb.auth.signOut();
   document.getElementById('loginOverlay').style.display = 'flex';
+}
+
+// Forgot password
+async function handleForgotPassword() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const msgEl = document.getElementById('forgotMsg');
+  if (!email) {
+    msgEl.style.display = 'block';
+    msgEl.style.background = 'var(--gold-soft)';
+    msgEl.style.color = 'var(--gold)';
+    msgEl.textContent = 'Escribe tu correo arriba primero';
+    return;
+  }
+  document.getElementById('forgotLink').textContent = 'Enviando...';
+  const { error } = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/reset-password',
+  });
+  if (error) {
+    msgEl.style.display = 'block';
+    msgEl.style.background = 'var(--red-soft)';
+    msgEl.style.color = 'var(--red)';
+    msgEl.textContent = error.message;
+  } else {
+    msgEl.style.display = 'block';
+    msgEl.style.background = 'var(--green-soft)';
+    msgEl.style.color = 'var(--green)';
+    msgEl.textContent = 'Listo, revisa tu correo para restablecer tu contrasena';
+  }
+  document.getElementById('forgotLink').textContent = 'Olvide mi contrasena';
 }
 
 // User dropdown
