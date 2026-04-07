@@ -996,14 +996,12 @@ async function runAgent() {
 
   if (!text && files.length === 0) { alert('Pega texto o sube al menos un archivo'); return; }
 
-  // Get auth token
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { alert('Sesion expirada. Recarga la pagina.'); return; }
 
-  // Build FormData
+  // Build FormData — archivos se parsean en memoria en el servidor, no se guardan
   const fd = new FormData();
   fd.append('agent_type', currentAgent);
-  fd.append('user_id', session.user.id);
   if (text) fd.append('raw_text', text);
   for (let i = 0; i < files.length; i++) {
     fd.append('files', files[i], files[i].name);
@@ -1019,50 +1017,39 @@ async function runAgent() {
   }, 1000);
 
   try {
-    const res = await fetch(MODAL_API_URL + '/api/run-agent', {
+    // Endpoint sincrono: espera, genera en memoria, devuelve bytes. NADA se guarda.
+    const res = await fetch(MODAL_API_URL + '/api/run-agent-sync', {
       method: 'POST',
       body: fd,
       headers: { 'Authorization': 'Bearer ' + session.access_token },
     });
+    clearInterval(elapsedTimer);
+
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.detail || 'Error del servidor (' + res.status + ')');
     }
+
     const data = await res.json();
-    startPolling(data.run_id, session.access_token);
+    // Convertir base64 a blob y crear URL de descarga local
+    const byteChars = atob(data.data);
+    const byteArray = new Uint8Array(byteChars.length);
+    for (let i = 0; i < byteChars.length; i++) byteArray[i] = byteChars.charCodeAt(i);
+    const blob = new Blob([byteArray], { type: data.content_type });
+    const blobUrl = URL.createObjectURL(blob);
+
+    showResult(blobUrl, data.filename);
   } catch (e) {
     showError(e.message);
   }
 }
 
-function startPolling(runId, token) {
-  pollTimer = setInterval(async () => {
-    if (Date.now() - startTime > MAX_POLL_TIME) {
-      clearInterval(pollTimer);
-      showError('El agente tardo demasiado. Intenta con un texto mas corto.');
-      return;
-    }
-    try {
-      const res = await fetch(MODAL_API_URL + '/api/run-status/' + runId, {
-        headers: { 'Authorization': 'Bearer ' + token },
-      });
-      const data = await res.json();
-      if (data.status === 'completed') {
-        clearInterval(pollTimer);
-        clearInterval(elapsedTimer);
-        showResult(data.output_url);
-      } else if (data.status === 'failed') {
-        clearInterval(pollTimer);
-        showError(data.output || 'El agente encontro un error.');
-      }
-    } catch {}
-  }, POLL_INTERVAL);
-}
-
-function showResult(url) {
+function showResult(blobUrl, filename) {
   document.getElementById('modalProcessing').style.display = 'none';
   document.getElementById('modalResult').style.display = 'block';
-  document.getElementById('downloadLink').href = url || '#';
+  const link = document.getElementById('downloadLink');
+  link.href = blobUrl;
+  link.download = filename || 'documento';
 }
 
 function showError(msg) {
