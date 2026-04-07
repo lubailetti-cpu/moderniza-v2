@@ -324,6 +324,16 @@
   }
   .tidu-badge svg { width: 11px; height: 11px; }
 
+  /* ========== STAR RATING ========== */
+  .star-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: 28px; color: var(--border);
+    transition: color 0.15s, transform 0.15s;
+    padding: 0 2px; line-height: 1;
+  }
+  .star-btn:hover { transform: scale(1.15); }
+  .star-btn.active { color: #FBBF24; }
+
   /* ========== MO FAB + CHAT ========== */
   .mo-fab {
     position: fixed; bottom: 24px; right: 24px; z-index: 120;
@@ -859,7 +869,30 @@
         <a id="downloadLink" href="#" target="_blank" class="login-btn" style="display:inline-flex;align-items:center;gap:6px;margin-top:16px;text-decoration:none;">
           Descargar documento
         </a>
-        <button onclick="resetModal()" style="display:block;margin:12px auto 0;font-size:12px;color:var(--blue);background:none;border:none;cursor:pointer;font-weight:600;">
+
+        <!-- Rating survey -->
+        <div id="ratingSection" style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);">
+          <p style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">Queremos seguir mejorando</p>
+          <p style="font-size:11px;color:var(--text-muted);margin-bottom:12px;">¿Que te parecio este agente?</p>
+          <div id="starsContainer" style="display:flex;justify-content:center;gap:4px;margin-bottom:10px;">
+            <button class="star-btn" data-value="1" onclick="setRating(1)">&#9733;</button>
+            <button class="star-btn" data-value="2" onclick="setRating(2)">&#9733;</button>
+            <button class="star-btn" data-value="3" onclick="setRating(3)">&#9733;</button>
+            <button class="star-btn" data-value="4" onclick="setRating(4)">&#9733;</button>
+            <button class="star-btn" data-value="5" onclick="setRating(5)">&#9733;</button>
+          </div>
+          <div id="feedbackBox" style="display:none;">
+            <textarea id="feedbackText" class="agent-textarea" rows="3" placeholder="¿Que podriamos mejorar?" style="font-size:12px;margin-top:6px;"></textarea>
+          </div>
+          <button id="submitRatingBtn" style="display:none;margin-top:10px;padding:8px 20px;border-radius:8px;background:var(--blue);color:white;border:none;font-size:12px;font-weight:600;cursor:pointer;" onclick="submitRating()">
+            Enviar
+          </button>
+          <div id="ratingThanks" style="display:none;">
+            <p style="font-size:12px;color:var(--green);font-weight:600;margin-top:8px;">¡Gracias por tu feedback!</p>
+          </div>
+        </div>
+
+        <button onclick="resetModal()" style="display:block;margin:16px auto 0;font-size:12px;color:var(--blue);background:none;border:none;cursor:pointer;font-weight:600;">
           Generar otro
         </button>
       </div>
@@ -987,6 +1020,18 @@ function resetModal() {
   document.getElementById('fileList').textContent = '';
   document.getElementById('runAgentBtn').disabled = false;
   document.getElementById('runAgentBtn').textContent = 'Crear documento';
+  // Reset rating
+  currentRating = 0;
+  document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('feedbackBox').style.display = 'none';
+  document.getElementById('feedbackText').value = '';
+  document.getElementById('submitRatingBtn').style.display = 'none';
+  document.getElementById('ratingThanks').style.display = 'none';
+  document.getElementById('starsContainer').style.display = 'flex';
+  var rp = document.querySelector('#ratingSection > p:first-child');
+  if (rp) rp.style.display = '';
+  var rp2 = document.querySelector('#ratingSection > p:nth-child(2)');
+  if (rp2) rp2.style.display = '';
 }
 
 async function runAgent() {
@@ -1078,6 +1123,39 @@ document.querySelectorAll('.agent-card[data-agent]').forEach(card => {
     openAgentModal(card.dataset.agent);
   });
 });
+
+// ═══════════════════════════════════════════════════════════════
+// RATING
+// ═══════════════════════════════════════════════════════════════
+let currentRating = 0;
+
+function setRating(value) {
+  currentRating = value;
+  document.querySelectorAll('.star-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.value) <= value);
+  });
+  // Show feedback textarea if less than 5
+  document.getElementById('feedbackBox').style.display = value < 5 ? 'block' : 'none';
+  document.getElementById('submitRatingBtn').style.display = 'inline-block';
+}
+
+function submitRating() {
+  const feedback = document.getElementById('feedbackText').value.trim();
+  // Log to console (no server storage — zero storage mode)
+  console.info('[RATING]', JSON.stringify({
+    agent: currentAgent,
+    rating: currentRating,
+    feedback: feedback || null,
+    timestamp: new Date().toISOString(),
+  }));
+  // Show thanks
+  document.getElementById('starsContainer').style.display = 'none';
+  document.getElementById('feedbackBox').style.display = 'none';
+  document.getElementById('submitRatingBtn').style.display = 'none';
+  document.getElementById('ratingThanks').style.display = 'block';
+  document.querySelector('#ratingSection > p:first-child').style.display = 'none';
+  document.querySelector('#ratingSection > p:nth-child(2)').style.display = 'none';
+}
 
 // ═══════════════════════════════════════════════════════════════
 // MO CHAT
