@@ -665,7 +665,7 @@
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
         IA para el sector público
       </div>
-      <h1>Hola Manuel, bienvenido</h1>
+      <h1>Hola Manuel, te damos la bienvenida</h1>
       <p>Usa nuestros flujos automáticos con inteligencia artificial para generar documentos de gestión pública en minutos. Solo describe lo que necesitas y el flujo lo hace todo.</p>
       <div class="hero-stats">
         <div class="hero-stat"><strong>7</strong><span>Flujos activos</span></div>
@@ -1219,7 +1219,7 @@ async function checkAuth() {
   if (session) {
     document.getElementById('loginOverlay').style.display = 'none';
     const name = session.user.user_metadata?.name || session.user.email.split('@')[0];
-    document.querySelector('.hero h1').textContent = 'Hola ' + name + ', bienvenido';
+    document.querySelector('.hero h1').textContent = 'Hola ' + name + ', te damos la bienvenida';
     document.querySelector('.user-name').textContent = name;
     document.querySelector('.user-role').textContent = session.user.user_metadata?.entidad || '';
     const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
